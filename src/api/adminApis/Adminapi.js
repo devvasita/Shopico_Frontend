@@ -2,7 +2,7 @@ import { BASE_URL } from "../helper";
 import { commonrequest as CallApi } from "../Commonrequest";
 
 // Register API
-export const AdminRegisterApi = async (data, header) => {
+export const AdminRegisterApi = async (data, header) =>
   await CallApi(
     "POST",
     `${BASE_URL}/adminauth/api/register`,
@@ -10,10 +10,9 @@ export const AdminRegisterApi = async (data, header) => {
     header,
     "admin"
   );
-};
 
 // Login API
-export const AdminLoginApi = async (data, header) => {
+export const AdminLoginApi = async (data, header) =>
   await CallApi(
     "POST",
     `${BASE_URL}/adminauth/api/login`,
@@ -21,4 +20,3 @@ export const AdminLoginApi = async (data, header) => {
     header,
     "admin"
   );
-};

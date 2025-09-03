@@ -18,9 +18,9 @@ export const commonrequest = async (methods, url, body, header, auth) => {
   }
 
   if (header) {
-    config.headers["content-type"] = "multipart/form-data";
+    config.headers["Content-type"] = "multipart/form-data";
   } else {
-    config.headers["content-type"] = "application/json";
+    config.headers["Content-type"] = "application/json";
   }
 
   try {

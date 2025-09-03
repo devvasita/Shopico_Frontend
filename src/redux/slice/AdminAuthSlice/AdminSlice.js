@@ -1,14 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AdminLoginApi } from "../../../api/adminApis/Adminapi";
 
-export const AdminLoginAuth = createAsyncThunk("admin/login", async (data) => {
-  try {
-    const response = await AdminLoginApi(data);
-    return response.data;
-  } catch (error) {
-    throw error;
+export const AdminLoginAuth = createAsyncThunk(
+  "admin/login",
+  async (data, thunkApi) => {
+    console.log(data, "DATA");
+
+    try {
+      const response = await AdminLoginApi(data);
+
+      if (response.status == 200) {
+        localStorage.setItem("admintoken", response.data.token);
+        return response.data;
+      } else {
+        return thunkApi.rejectWithValue(
+          response.response.data.error || "Login Failed"
+        );
+      }
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response?.data || error.message);
+    }
   }
-});
+);
 
 const AdminSlice = createSlice({
   name: "admin",
