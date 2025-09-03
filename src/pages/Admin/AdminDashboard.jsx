@@ -51,7 +51,7 @@ const dashboardData = {
 // Array of data for the overview cards
 const overviewCards = [
   {
-    title: "Total Orders",
+    title: " Orders",
     value: dashboardData.totalOrders,
     icon: <ShoppingCartOutlinedIcon fontSize="large" />,
     color: "primary.light",
@@ -59,7 +59,7 @@ const overviewCards = [
     trendText: "Up from yesterday",
   },
   {
-    title: "Total Products",
+    title: " Products",
     value: dashboardData.totalProducts,
     icon: <Inventory2OutlinedIcon fontSize="large" />,
     color: "secondary.light",
@@ -75,7 +75,7 @@ const overviewCards = [
     trendText: "Up from yesterday",
   },
   {
-    title: "Total Returns",
+    title: " Returns",
     value: dashboardData.totalReturns,
     icon: <AutorenewOutlinedIcon fontSize="large" />,
     color: "secondary.main",

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const commonrequest = async (methods, url, body, header, auth) => {
-  let adminToken = "";
+  let adminToken = localStorage.getItem("admintoken");
   let userToken = "";
 
   let config = {

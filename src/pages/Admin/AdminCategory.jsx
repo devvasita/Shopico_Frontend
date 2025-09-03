@@ -1,27 +1,39 @@
 import {
   Box,
   Button,
-  Container,
+  Divider,
+  Paper,
   TextField,
   Typography,
-  Paper,
-  Divider,
 } from "@mui/material";
 
-import { useForm } from "react-hook-form";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { AdminAddCategory } from "../../redux/slice/ProductSlice/ProductSlice";
+import { useToast } from "../../components/common/ToastProvider";
 
 export default function AdminCategory() {
+  const dispatch = useDispatch();
+  const toast = useToast();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
+    reset,
   } = useForm({
     mode: "all",
   });
 
-  const onSubmit = (data) => {
-    console.log("Form Submitted: ", data);
+  const onSubmit = async (categoryData) => {
+    try {
+      await dispatch(AdminAddCategory(categoryData)).unwrap();
+      reset();
+      toast("Category added successfully", "success");
+    } catch (error) {
+      toast(error, "error");
+    }
   };
 
   return (
@@ -57,7 +69,7 @@ export default function AdminCategory() {
             size="small"
             type="text"
             margin="normal"
-            {...register("category", {
+            {...register("categoryName", {
               required: "Category is required",
             })}
             error={Boolean(errors.name)}

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -19,10 +19,18 @@ import {
 import { Close, Upload } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { useDispatch, useSelector } from "react-redux";
+import { GetCategory } from "../../redux/slice/ProductSlice/ProductSlice";
 
 export default function RegisterProduct() {
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
+
+  const [category, setCategory] = useState([]);
+
+  const { categoryList } = useSelector((state) => state.Product);
 
   const {
     register,
@@ -67,6 +75,24 @@ export default function RegisterProduct() {
       console.log("Product registered successfully!");
     }, 2000); // Simulate a 2-second loading period
   };
+
+  useEffect(() => {
+    dispatch(GetCategory());
+  }, []);
+
+  useEffect(() => {
+    let categoryData = [];
+
+    for (const category of categoryList) {
+      console.log(category, "?????");
+      categoryData.push({
+        id: category._id,
+        label: category?.categoryName,
+      });
+    }
+
+    setCategory(categoryData);
+  }, [categoryList]);
 
   return (
     <>
@@ -125,7 +151,7 @@ export default function RegisterProduct() {
                   error={!!errors.category}
                   margin="normal"
                 >
-                  <InputLabel id="category-label">Country</InputLabel>
+                  <InputLabel id="category-label">Category</InputLabel>
                   <Controller
                     name="category"
                     control={control}
@@ -144,14 +170,11 @@ export default function RegisterProduct() {
                           },
                         }}
                       >
-                        <MenuItem> One</MenuItem>
-                        <MenuItem> Two</MenuItem>
-                        <MenuItem> Three</MenuItem>
-                        {/* {countryList.map((c) => (
-                          <MenuItem key={c.isoCode} value={c.isoCode}>
-                            {c.name}
+                        {category.map((c) => (
+                          <MenuItem key={c.id} value={c.id}>
+                            {c.label}
                           </MenuItem>
-                        ))} */}
+                        ))}
                       </Select>
                     )}
                   />

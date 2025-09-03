@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Box,
   Drawer,
@@ -29,12 +29,12 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-
-// Dummy data for design purposes
-const dummyAdminData = {
-  name: "Admin User",
-  profile: "https://via.placeholder.com/150",
-};
+import { useDispatch, useSelector } from "react-redux";
+import {
+  AdminLoggedIn,
+  AdminLogout,
+} from "../../redux/slice/AdminAuthSlice/AdminSlice";
+import { useToast } from "../common/ToastProvider";
 
 const drawerWidth = 240;
 
@@ -47,9 +47,23 @@ const navLinks = [
   { text: "Settings", path: "/admin/settings", icon: <SettingsIcon /> },
 ];
 
-const AdminSidebar = ({ children }) => {
+const AdminSidebar = () => {
+  // hooks
+  const { adminLoggedInData } = useSelector((state) => state?.Admin);
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  // local state
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+
+
+  // event handlers
+
+  const adminVerify = () => {
+    dispatch(AdminLoggedIn());
+  };
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -63,28 +77,26 @@ const AdminSidebar = ({ children }) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    // This is a placeholder for the actual logout logic
-    console.log("Logging out...");
-    handleClose();
-    // In a real app, you would dispatch the logout action here
-    // dispatch(AdminLogout()).then(() => navigate('/admin/login'));
+  const handleLogout = async () => {
+    try {
+      const logOutData = await dispatch(AdminLogout()).unwrap();
+      toast(logOutData?.message || "Admin Logout Successfully", "success");
+    } catch (error) {
+      toast(error || "Admin Logout Successfully", "success");
+    } finally {
+      navigate("/login");
+      handleClose();
+    }
   };
+
+  // effects
+  useEffect(() => {
+    adminVerify();
+  }, []);
 
   const drawer = (
     <Box>
-      <Toolbar>
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          sx={{ fontWeight: "bold" }}
-        >
-          {dummyAdminData.name} Admin
-        </Typography>
-      </Toolbar>
-
-      <Divider />
+      <Toolbar />
 
       <List>
         {navLinks.map((item) => (
@@ -222,7 +234,7 @@ const AdminSidebar = ({ children }) => {
               variant="body1"
               sx={{ mr: 1, display: { xs: "none", sm: "block" } }}
             >
-              {dummyAdminData.name}
+              {adminLoggedInData?.[0]?.name || "user"}
             </Typography>
             <IconButton
               size="large"
@@ -232,10 +244,10 @@ const AdminSidebar = ({ children }) => {
               onClick={handleMenu}
               color="inherit"
             >
-              {dummyAdminData.profile ? (
+              {adminLoggedInData?.[0]?.profile ? (
                 <Avatar
-                  alt={dummyAdminData.name}
-                  src={dummyAdminData.profile}
+                  alt={adminLoggedInData?.[0]?.name}
+                  src={adminLoggedInData?.[0]?.profile}
                 />
               ) : (
                 <AccountCircle />
@@ -284,7 +296,6 @@ const AdminSidebar = ({ children }) => {
               boxSizing: "border-box",
               width: drawerWidth,
               backgroundColor: "primary.main",
-              //   color: "white",
             },
           }}
         >

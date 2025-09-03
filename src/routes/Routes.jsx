@@ -24,6 +24,9 @@ const UserOrders = lazy(() => import("../pages/Order/UserOrder"));
 const AdminLayout = lazy(() =>
   import("../components/AdminCommonLayout/AdminSidebar")
 );
+
+const AdminLogin = lazy(() => import("../pages/Admin/AdminLogin"));
+
 const AdminDashboard = lazy(() => import("../pages/Admin/AdminDashboard"));
 
 const AdminProducts = lazy(() => import("../pages/Admin/AdminProducts"));
@@ -89,6 +92,10 @@ export const routes = [
       {
         path: "order",
         element: <UserOrders />,
+      },
+      {
+        path: "admin/login",
+        element: <AdminLogin />,
       },
     ],
   },

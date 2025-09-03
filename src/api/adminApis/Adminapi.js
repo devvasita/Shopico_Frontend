@@ -20,3 +20,17 @@ export const AdminLoginApi = async (data, header) =>
     header,
     "admin"
   );
+
+//adminLogged In api
+export const AdminLoggedInApi = async (header) =>
+  await CallApi(
+    "GET",
+    `${BASE_URL}/adminauth/api/adminverify`,
+    "",
+    header,
+    "admin"
+  );
+
+// adminLogout api
+export const AdminLogOutApi = async (header) =>
+  await CallApi("GET", `${BASE_URL}/adminauth/api/logout`, "", header, "admin");
