@@ -37,3 +37,12 @@ export const GetAllProductsApi = async (data, header) =>
     header,
     "admin"
   );
+
+export const DeleteProductApi = async (productId, header) =>
+  await CallApi(
+    "DELETE",
+    `${BASE_URL}/product/api/deleteProduct/${productId}`,
+    {}, //sending empty object in delete rq due to vaild json for backend
+    header,
+    "admin"
+  );

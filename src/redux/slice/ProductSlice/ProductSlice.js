@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   AddProductApi,
   AdminAddCategoryApi,
+  DeleteProductApi,
   GetAllProductsApi,
   GetCategoryApi,
 } from "../../../api/ProductApis/ProductApi";
@@ -78,6 +79,28 @@ export const GetAllProducts = createAsyncThunk(
   }
 );
 
+// delete single product api
+export const DeleteProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (productId, thunkApi) => {
+    try {
+      const response = await DeleteProductApi(productId);
+
+      console.log(productId, "PRDID");
+
+      console.log(response, "RESPONSE");
+
+      if (response.status == 200) {
+        return response.data;
+      } else {
+        return thunkApi.rejectWithValue(response.response.data.error);
+      }
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const ProductSlice = createSlice({
   name: "product",
   initialState: {
@@ -85,6 +108,7 @@ const ProductSlice = createSlice({
     categoryList: [],
     products: [],
     addProducts: [],
+    deleteProduct: [],
     loading: false,
     error: null,
   },
@@ -138,6 +162,19 @@ const ProductSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(GetAllProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // delete single product by admin
+      .addCase(DeleteProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(DeleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deleteProduct = action.payload;
+      })
+      .addCase(DeleteProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
