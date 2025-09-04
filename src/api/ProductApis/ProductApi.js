@@ -19,3 +19,21 @@ export const GetCategoryApi = async (header) =>
     header,
     "admin"
   );
+
+export const AddProductApi = async (data, header = true) =>
+  await CallApi(
+    "POST",
+    `${BASE_URL}/product/api/addProducts`,
+    data,
+    header,
+    "admin"
+  );
+
+export const GetAllProductsApi = async (data, header) =>
+  await CallApi(
+    "GET",
+    `${BASE_URL}/product/api/getProducts?categoryId=${data.category}&page=${data.page}`,
+    data,
+    header,
+    "admin"
+  );
